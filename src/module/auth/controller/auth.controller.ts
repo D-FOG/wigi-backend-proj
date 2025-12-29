@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { loginUser, registerStudent } from "../service/auth.service.js";
-import { apiResponse } from "../../../utils/apiResponse.js";
+import { loginUser, registerStudent } from "../service/auth.service";
+import { apiResponse } from "../../../utils/apiResponse";
 
 export const register = async (req: Request, res: Response) => {
   const user = await registerStudent(req.body);

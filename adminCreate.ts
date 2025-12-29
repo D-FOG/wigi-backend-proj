@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { User } from "./src/module/user/model/user.model.js";
+import { User } from "./src/module/user/model/user.model";
 
 const createAdmin = async () => {
   const hashed = await bcrypt.hash("admin123", 10);

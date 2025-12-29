@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { User } from "../../user/model/user.model.js";
-import { ApiError } from "../../../utils/apiError.js";
+import { User } from "../../user/model/user.model";
+import { ApiError } from "../../../utils/apiError";
 
 
 export const registerStudent = async (data: {

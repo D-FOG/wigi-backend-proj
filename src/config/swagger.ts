@@ -1,4 +1,12 @@
+import path from "path";
 import swaggerJsdoc from "swagger-jsdoc";
+
+const isProduction = process.env.NODE_ENV === "production";
+
+// Determine correct path based on environment
+const apisPath = isProduction
+  ? path.join(__dirname, "../module/**/*.swagger.js") // compiled JS
+  : path.join(__dirname, "../module/**/*.swagger.ts"); // dev with ts-node
 
 export const swaggerSpec = swaggerJsdoc({
   definition: {
@@ -29,7 +37,5 @@ export const swaggerSpec = swaggerJsdoc({
       },
     ],
   },
-
-  // VERY IMPORTANT
-  apis: ["./src/modules/**/*.swagger.ts"],
+  apis: [apisPath],
 });
