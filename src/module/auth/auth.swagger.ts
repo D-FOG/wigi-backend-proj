@@ -17,18 +17,82 @@
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - name
- *               - email
- *               - password
- *             properties:
- *               name:
- *                 type: string
- *               email:
- *                 type: string
- *               password:
- *                 type: string
+ *            oneOf:
+ *             - type: object
+ *               required:
+ *                 - firstName
+ *                 - lastName
+ *                 - email
+ *                 - phoneNumber
+ *                 - occupation
+ *                 - courseOfStudy
+ *                 - level
+ *                 - universityName
+ *               properties:
+ *                 firstName:
+ *                   type: string
+ *                 lastName:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                   format: email
+ *                 phoneNumber:
+ *                   type: string
+ *                 occupation:
+ *                   type: string
+ *                 courseOfStudy:
+ *                   type: string
+ *                 level:
+ *                   type: string
+ *                 universityName:
+ *                   type: string
+ *             - type: object
+ *               required:
+ *                 - firstName
+ *                 - lastName
+ *                 - email
+ *                 - phoneNumber
+ *                 - ocuppation
+ *                 - jobTitle
+ *                 - companyName
+ *               properties:
+ *                 firstName:
+ *                   type: string
+ *                 lastName:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                   format: email
+ *                 phoneNumber:
+ *                   type: string
+ *                 occupation:
+ *                   type: string
+ *                 jobTitle:
+ *                   type: string
+ *                 companyName:
+ *                   type: string
+ *             - type: object
+ *               required:
+ *                 - firstName
+ *                 - lastName
+ *                 - email
+ *                 - phoneNumber
+ *                 - ocuppation
+ *                 - companyName
+ *               properties:
+ *                 firstName:
+ *                   type: string
+ *                 lastName:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                   format: email
+ *                 phoneNumber:
+ *                   type: string
+ *                 occupation:
+ *                   type: string
+ *                 companyName:
+ *                   type: string
  *     responses:
  *       201:
  *         description: Student registered successfully

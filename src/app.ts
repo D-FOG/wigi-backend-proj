@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 
 import AuthRoute from "./module/auth/route/auth.route";
+import UserRoute from "./module/user/route/user.route";
 import { errorHandler } from './middlewares/error.middleware';
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger";
@@ -22,6 +23,7 @@ app.get('/', (_req, res) => {
 
 //routes middleware
 app.use('/api/v1', AuthRoute)._router;
+app.use('/api/v1/users', UserRoute)._router;
 
 //error handler
 app.use(errorHandler);

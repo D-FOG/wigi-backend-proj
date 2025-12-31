@@ -5,8 +5,18 @@ import { ApiError } from "../../../utils/apiError";
 
 
 export const registerStudent = async (data: {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  countryCode: string;
+  phoneNumber: string;
+  course: string;
+  occupation: string;
+  courseOfStudy: string;
+  level: string;
+  universityName: string;
+  jobTitle: string;
+  companyName: string;
   password: string;
 }) => {
   const existing = await User.findOne({ email: data.email });
@@ -42,7 +52,8 @@ export const loginUser = async (
 
   const safeUser = {
     id: user._id,
-    name: user.name,
+    firstName: user.firstName,
+    lastName: user.lastName,
     email: user.email,
     role: user.role,
     profileCompleted: user.profileCompleted,
