@@ -19,6 +19,8 @@
  *        description: Profile Fetched successfully
  *      400:
  *        description: Bad Request
+ *      401:
+ *        description: Unauthorized
  */
 
 /**
@@ -64,6 +66,8 @@
  *         description: Profile Updated successfully
  *       400:
  *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
  */
 
 /**
