@@ -21,6 +21,10 @@ export const swaggerSpec = swaggerJsdoc({
         url: "http://localhost:4000/api",
         description: "Local server",
       },
+      {
+        url: "https://wigi-backend-proj.onrender.com/api",
+        description: "Render server",
+      },
     ],
     components: {
       securitySchemes: {

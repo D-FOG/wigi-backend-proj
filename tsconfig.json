@@ -55,6 +55,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "include": ["src", "adminCreate.ts"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "adminCreate.ts"]
 }
 

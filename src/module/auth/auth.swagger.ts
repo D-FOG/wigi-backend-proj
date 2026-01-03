@@ -7,7 +7,7 @@
 
 /**
  * @openapi
- * /auth/register:
+ * /v1/register:
  *   post:
  *     summary: Register a new student
  *     tags:
@@ -100,7 +100,7 @@
 
 /**
  * @openapi
- * /auth/login:
+ * /v1/login:
  *   post:
  *     summary: Student login
  *     tags:
@@ -126,7 +126,7 @@
 
 /**
  * @openapi
- * /auth/admin/login:
+ * /v1/admin/login:
  *   post:
  *     summary: Admin login
  *     tags:

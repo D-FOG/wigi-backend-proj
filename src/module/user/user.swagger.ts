@@ -7,7 +7,7 @@
 
 /**
  * @openapi
- * /user/profile:   
+ * /v1/users/profile:   
  *  get:
  *    summary: Get a User Profile 
  *    tags: 
@@ -23,7 +23,7 @@
 
 /**
  * @openapi
- * /user/profile:
+ * /v1/users/profile:
  *  put:
  *   summary: Update User Profile
  *   tags:
@@ -68,7 +68,7 @@
 
 /**
  * @openapi
- * /user/account:
+ * /v1/users/account:
  *  delete:
  *    summary: Delete User Account
  *    tags:
