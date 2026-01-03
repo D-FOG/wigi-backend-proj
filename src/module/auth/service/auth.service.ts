@@ -8,7 +8,7 @@ export const registerStudent = async (data: {
   firstName: string;
   lastName: string;
   email: string;
-  countryCode: string;
+  // countryCode: string;
   phoneNumber: string;
   course: string;
   occupation: string;
@@ -24,11 +24,14 @@ export const registerStudent = async (data: {
 
   const hashed = await bcrypt.hash(data.password, 10);
 
-  const user = await User.create({
+  const userDoc = await User.create({
     ...data,
     password: hashed,
     role: "student",
   });
+
+  const { password, __v, ...user } = userDoc.toObject();
+  
 
   return user;
 };
@@ -49,6 +52,8 @@ export const loginUser = async (
     process.env.JWT_SECRET!,
     { expiresIn: "7d" }
   );
+
+  console.log("user token generated", token);
 
   const safeUser = {
     id: user._id,

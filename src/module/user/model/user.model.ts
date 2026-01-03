@@ -15,12 +15,15 @@ export interface IUser extends Document {
   state?: string;
   phoneNumber?: string;
 
-  occupation: "student" | "professional" | "self_employed";
+  occupation: "student" | "professional" | "self employed";
 
   // education / work
+  course?: string;
   courseOfStudy?: string;
   jobTitle?: string;
   companyName?: string;
+  level?: string;
+  universityName?: string;
 
   profileImage?:{
     url: string;
@@ -61,11 +64,14 @@ const userSchema = new Schema<IUser>(
 
     occupation: {
       type: String,
-      enum: ["student", "professional", "self_employed"],
+      enum: ["student", "professional", "self employed"],
       required: true,
     },
 
     // education / work
+    course: { type: String },
+    level: { type: String },
+    universityName: { type: String },
     courseOfStudy: { type: String },
     jobTitle: { type: String },
     companyName: { type: String },

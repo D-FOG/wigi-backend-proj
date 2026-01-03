@@ -4,7 +4,7 @@ import { User } from "../../user/model/user.model";
 import { ApiError } from "../../../utils/apiError";
 
 export const getMyProfile = async (userId: string) => {
-  const profile = await User.findById(userId);
+  const profile = await User.findById(userId).select("-password -__v");
   if (!profile) throw new ApiError(404, "Profile not found");
   return profile;
 };

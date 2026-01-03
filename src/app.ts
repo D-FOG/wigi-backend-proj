@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+dotenv.config();
 import express from "express";
 import cors from "cors";
 
@@ -7,8 +8,6 @@ import UserRoute from "./module/user/route/user.route";
 import { errorHandler } from './middlewares/error.middleware';
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger";
-
-dotenv.config();
 
 const app = express();
 
