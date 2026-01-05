@@ -7,7 +7,7 @@
 
 /**
  * @openapi
- * /v1/courses
+ * /v1/courses:
  *  get:
  *    summary: User views courses
  *    tags:
@@ -23,7 +23,7 @@
 
 /**
  * @openapi
- * /v1/courses/{courseId}
+ * /v1/courses/{courseId}:
  *  get:
  *    summary: User views a single course
  *    tags:
@@ -47,7 +47,7 @@
 
 /**
  * @openapi
- * /v1/courses/{courseId}/enroll
+ * /v1/courses/{courseId}/enroll:
  *  post:
  *    summary: User enrolls in a course
  *    tags:
@@ -73,7 +73,7 @@
 
 /**
  * @openapi
- * /v1/my-courses
+ * /v1/my-courses:
  *  get:
  *    summary: User views all enrolled courses
  *    tags:
@@ -89,7 +89,7 @@
 
 /**
  * @openapi
- * /v1/my-courses/{courseId}
+ * /v1/my-courses/{courseId}:
  *  get:
  *    summary: User views a single enrolled courses
  *    tags:
