@@ -112,7 +112,7 @@
  */
 /**
  * @openapi
- * /v1/my-courses/{courseId}/topics/{topicId}/complete
+ * /v1/my-courses/{courseId}/topics:/{topicId}/complete:
  *  post:
  *    summary: User views a single enrolled courses
  *    tags:

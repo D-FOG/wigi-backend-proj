@@ -7,7 +7,7 @@
 
 /**
  * @openapi
- * /v1/admin/courses
+ * /v1/admin/courses:
  *  post:
  *    summary: Admin Adds User courses
  *    tags:
@@ -36,7 +36,7 @@
 
 /**
  * @openapi
- * /v1/admin/courses/{courseId}/modules
+ * /v1/admin/courses/{courseId}/modules:
  *  post:
  *    summary: Admin Adds modules in course
  *    tags:
@@ -71,7 +71,7 @@
 
 /**
  * @openapi
- * /v1/admin/modules/{moduleId}/topics
+ * /v1/admin/modules/{moduleId}/topics:
  *  post:
  *    summary: Admin Adds Topics in Module
  *    tags:
@@ -101,8 +101,6 @@
  *    responses:
  *      200:
  *        description: Topic Created successfully
- *      400:
- *        description: Bad request
  *      404:
  *        description: Module not found
  *      400:
@@ -113,7 +111,7 @@
 
 /**
  * @openapi
- * /v1/admin/courses/{courseId}
+ * /v1/admin/courses/{courseId}:
  *  put:
  *    summary: Admin updates course
  *    tags:
@@ -152,7 +150,7 @@
 
 /**
  * @openapi
- * /v1/admin/courses/{courseId}
+ * /v1/admin/courses/{courseId}:
  *  delete:
  *    summary: Admin deletes course
  *    tags:
@@ -178,7 +176,7 @@
 
 /**
  * @openapi
- * /v1/admin/modules/{moduleId}
+ * /v1/admin/modules/{moduleId}:
  *  put:
  *    summary: Admin updates module
  *    tags:
@@ -215,7 +213,7 @@
 
 /**
  * @openapi
- * /v1/admin/modules/{moduleId}
+ * /v1/admin/modules/{moduleId}:
  *  delete:
  *    summary: Admin deletes module
  *    tags:
@@ -241,7 +239,7 @@
 
 /**
  * @openapi
- * /v1/admin/topics/{topicId}
+ * /v1/admin/topics/{topicId}:
  *  put:
  *    summary: Admin updates topic
  *    tags:
@@ -278,7 +276,7 @@
 
 /**
  * @openapi
- * /v1/admin/topics/{topicId}
+ * /v1/admin/topics/{topicId}:
  *  delete:
  *    summary: Admin deletes topic
  *    tags:
