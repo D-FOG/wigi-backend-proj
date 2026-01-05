@@ -5,6 +5,9 @@ import cors from "cors";
 
 import AuthRoute from "./module/auth/route/auth.route";
 import UserRoute from "./module/user/route/user.route";
+import CourseRoute from "./module/course/route/course.route";
+import AdminRoute from "./module/course/Admin/route/course.route";
+import CertificateRoute from "./module/certificate/route/certificate.route"
 import { errorHandler } from './middlewares/error.middleware';
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger";
@@ -28,6 +31,9 @@ app.get('/', (_req, res) => {
 //routes middleware
 app.use('/api/v1', AuthRoute);
 app.use('/api/v1/users', UserRoute);
+app.use('/api/v1', CourseRoute);
+app.use('/api/v1', AdminRoute);
+app.use('/api/v1', CertificateRoute);
 
 //error handler
 app.use(errorHandler);

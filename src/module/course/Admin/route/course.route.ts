@@ -42,13 +42,13 @@ router.post(
   adminCreateTopic
 );
 
-router.put("/courses/:courseId", authMiddleware, adminOnly, updateCourse);
-router.delete("/courses/:courseId", authMiddleware, adminOnly, deleteCourse);
+router.put("/admin/courses/:courseId", authMiddleware, adminOnly, updateCourse);
+router.delete("/admin/courses/:courseId", authMiddleware, adminOnly, deleteCourse);
 
-router.put("/modules/:moduleId", authMiddleware, adminOnly, updateModule);
-router.delete("/modules/:moduleId", authMiddleware, adminOnly, deleteModule);
+router.put("/admin/modules/:moduleId", authMiddleware, adminOnly, updateModule);
+router.delete("/admin/modules/:moduleId", authMiddleware, adminOnly, deleteModule);
 
-router.put("/topics/:topicId", authMiddleware, adminOnly, updateTopic);
-router.delete("/topics/:topicId", authMiddleware, adminOnly, deleteTopic);
+router.put("/admin/topics/:topicId", authMiddleware, adminOnly, updateTopic);
+router.delete("/admin/topics/:topicId", authMiddleware, adminOnly, deleteTopic);
 
 export default router;
