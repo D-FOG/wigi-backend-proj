@@ -8,11 +8,13 @@ import { ApiError } from "../../../../utils/apiError";
 export const createCourse = async (
   title: string,
   description: string | undefined,
+  track: string,
   adminId: string
 ) => {
   const course = await Course.create({
     title,
     description,
+    track,
     createdBy: adminId,
     isPublished: true,
   });
@@ -42,4 +44,9 @@ export const deleteCourseService = async (courseId: string) => {
   await Topic.deleteMany({ courseId });
   await Enrollment.deleteMany({ courseId });
   await course.deleteOne();
+};
+
+// Get all courses for admin
+export const getAdminCoursesService = async () => {
+  return Course.find().sort({ createdAt: -1 });
 };

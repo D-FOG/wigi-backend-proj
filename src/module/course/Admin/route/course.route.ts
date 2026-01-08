@@ -9,6 +9,10 @@ import {
   deleteModule,
   updateTopic,
   deleteTopic,
+  updateTopicMaterial,
+  getAdminCourses,
+  getCourseModules,
+  getModuleTopics
 } from "../controller/course.controller";
 
 import { authMiddleware } from "../../../../middlewares/auth.middleware";
@@ -51,4 +55,32 @@ router.delete("/admin/modules/:moduleId", authMiddleware, adminOnly, deleteModul
 router.put("/admin/topics/:topicId", authMiddleware, adminOnly, updateTopic);
 router.delete("/admin/topics/:topicId", authMiddleware, adminOnly, deleteTopic);
 
+router.put(
+  "/admin/topics/:topicId/material",
+  authMiddleware,
+  adminOnly,
+  upload.single("material"),
+  updateTopicMaterial
+);
+
+router.get(
+  "/admin/courses",
+  authMiddleware,
+  adminOnly,
+  getAdminCourses
+);
+
+router.get(
+  "/admin/courses/:courseId/modules",
+  authMiddleware,
+  adminOnly,
+  getCourseModules
+);
+
+router.get(
+  "/admin/modules/:moduleId/topics",
+  authMiddleware,
+  adminOnly,
+  getModuleTopics
+);
 export default router;

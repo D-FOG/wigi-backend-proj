@@ -1,4 +1,6 @@
+import { User } from "../../user/model/user.model";
 import { Course } from "../model/course.model";
+import { CourseModule } from "../model/module.model";
 import { Topic } from "../model/topic.model";
 import { ApiError } from "../../../utils/apiError";
 import { Enrollment } from "../model/enrollment.model";
@@ -107,6 +109,31 @@ export const getMyCourses = async (userId: string) => {
     inProgress: enrollments.filter(e => e.status === "in_progress"),
     completed: enrollments.filter(e => e.status === "completed"),
   };
+};
+
+//Get courses based on user's enrolled courses on registration
+export const getUserCoursesService = async (userId: string) => {
+  const user = await User.findById(userId).select("course");
+  if (!user) throw new ApiError(404, "User not found");
+
+  return Course.find({
+    course: user.course,
+    isPublished: true,
+  }).sort({ createdAt: -1 });
+};
+
+//Get modules of a course by course ID
+export const getCourseModulesService = async (courseId: string) => {
+  return CourseModule.find({ courseId })
+    .select("_id title order")
+    .sort({ order: 1 });
+};
+
+//Get topics of a module by module ID
+export const getModuleTopicsService = async (moduleId: string) => {
+  return Topic.find({ moduleId })
+    .select("_id title order materials.type materials.url")
+    .sort({ order: 1 });
 };
 
 

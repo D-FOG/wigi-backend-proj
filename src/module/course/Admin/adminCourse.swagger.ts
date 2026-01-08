@@ -299,3 +299,39 @@
  *      401:
  *        description: Unauthorized
  */
+
+/**
+ * @openapi
+ * /v1/admin/topics/{topicId}/material:
+ *  put:
+ *    summary: Admin updates topic material
+ *    tags:
+ *      - Admin
+ *    security:
+ *      -bearerAuth: []
+ *    parameters:
+ *      - in: path
+ *        name: topicId
+ *        required: true
+ *        schema:
+ *          type: string
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        multipart/form-data:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              material:
+ *                type: string
+ *                format: binary
+ *    responses:
+ *      200:
+ *        description: Topic Material Updated successfully
+ *      404:
+ *        description: Topic not found
+ *      400:
+ *        description: Material file is required
+ *      401:
+ *        description: Unauthorized
+ */

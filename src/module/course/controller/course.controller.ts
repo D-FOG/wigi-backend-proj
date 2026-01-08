@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { browseCourses, getCoursePreview, enrollCourse, getMyCourse, completeTopic, getMyCourses } from "../service/course.service";
+import { browseCourses, getCoursePreview, enrollCourse, getMyCourse, completeTopic, getMyCourses, getCourseModulesService, getModuleTopicsService, getUserCoursesService } from "../service/course.service";
 import { apiResponse } from "../../../utils/apiResponse";
 import { AuthRequest } from "../../../middlewares/auth.middleware";
 
@@ -42,4 +42,22 @@ export const trackCompleteTopic = async (req: AuthRequest, res: Response) => {
 export const getMyCoursesList = async (req: AuthRequest, res: Response) => {
   const myCourses = await getMyCourses(req.user!.id);
   return apiResponse(res, 200, "My Courses fetched", myCourses);
+};
+
+//Get all courses of a user based on course chosen on registration
+export const getUserCourses = async (req: AuthRequest, res: Response) => {
+  const courses = await getUserCoursesService(req.user!.id);
+  return apiResponse(res, 200, "User courses fetched", courses);
+};
+
+//Get modules of a course by course ID
+export const getCourseModules = async (req: Request, res: Response) => {
+  const modules = await getCourseModulesService(req.params.courseId);
+  return apiResponse(res, 200, "Modules fetched successfully", modules);
+};
+
+//Get topics of a module by module ID
+export const getModuleTopics = async (req: Request, res: Response) => {
+  const topics = await getModuleTopicsService(req.params.moduleId);
+  return apiResponse(res, 200, "Topics fetched successfully", topics);
 };

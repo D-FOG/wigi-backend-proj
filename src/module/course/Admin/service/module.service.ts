@@ -40,3 +40,10 @@ export const deleteModuleService = async (moduleId: string) => {
   await module.deleteOne();
 };
 
+//Get modules of a course by course ID
+export const getCourseModulesService = async (courseId: string) => {
+  return CourseModule.find({ courseId })
+    .select("_id title order")
+    .sort({ order: 1 });
+};
+

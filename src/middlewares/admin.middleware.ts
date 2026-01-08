@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
-import { AuthRequest } from "./auth.middleware.js";
-import { ApiError } from "../utils/apiError.js";
+import { AuthRequest } from "./auth.middleware";
+import { ApiError } from "../utils/apiError";
 
 export const adminOnly = (
   req: AuthRequest,

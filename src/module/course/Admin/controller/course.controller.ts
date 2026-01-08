@@ -1,16 +1,17 @@
 import { Request, Response } from "express";
-import { createCourse, updateCourseService, deleteCourseService } from "../service/course.service";
-import { createModule, updateModuleService, deleteModuleService } from "../service/module.service";
-import { createTopic, updateTopicService, deleteTopicService } from "../service/topic.service";
+import { createCourse, updateCourseService, deleteCourseService, getAdminCoursesService } from "../service/course.service";
+import { createModule, updateModuleService, deleteModuleService, getCourseModulesService } from "../service/module.service";
+import { createTopic, updateTopicService, deleteTopicService, updateTopicMaterialService, getModuleTopicsService } from "../service/topic.service";
 import { apiResponse } from "../../../../utils/apiResponse";
 import { AuthRequest } from "../../../../middlewares/auth.middleware";
 
 export const adminCreateCourse = async (req: AuthRequest, res: Response) => {
-  const { title, description } = req.body;
+  const { title, description, track } = req.body;
 
   const course = await createCourse(
     title,
     description,
+    track,
     req.user!.id
   );
 
@@ -32,7 +33,7 @@ export const adminCreateTopic = async (req: Request, res: Response) => {
   const topic = await createTopic(
     moduleId,
     title,
-    req.file,
+    req.file!,
     order
   );
 
@@ -76,4 +77,27 @@ export const updateTopic = async (req: Request, res: Response) => {
 export const deleteTopic = async (req: Request, res: Response) => {
   await deleteTopicService(req.params.topicId);
   return apiResponse(res, 200, "Topic deleted successfully");
+};
+
+export const updateTopicMaterial = async (req: Request, res: Response) => {
+  const topic = await updateTopicMaterialService(
+    req.params.topicId,
+    req.file!
+  );
+  return apiResponse(res, 200, "Topic material updated successfully", topic);
+};
+
+export const getAdminCourses = async (req: Request, res: Response) => {
+  const courses = await getAdminCoursesService();
+  return apiResponse(res, 200, "Courses fetched successfully", courses);
+};
+
+export const getCourseModules = async (req: Request, res: Response) => {
+  const modules = await getCourseModulesService(req.params.courseId);
+  return apiResponse(res, 200, "Modules fetched successfully", modules);
+};
+
+export const getModuleTopics = async (req: Request, res: Response) => {
+  const topics = await getModuleTopicsService(req.params.moduleId);
+  return apiResponse(res, 200, "Topics fetched successfully", topics);
 };
