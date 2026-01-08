@@ -335,3 +335,63 @@
  *      401:
  *        description: Unauthorized
  */
+
+/**
+ * @openapi
+ * /v1/admin/courses:
+ *  get:
+ *    summary: Admin views all courses
+ *    tags:
+ *      - Admin
+ *    security:
+ *      -bearerAuth: []
+ *    responses:
+ *      200:
+ *        description: Courses fetched successfully
+ *      401:
+ *        description: Unauthorized
+ */
+
+/**
+ * @openapi
+ * /v1/admin/courses/{courseId}/modules:
+ *  get:
+ *    summary: Admin views a course's modules
+ *    tags:
+ *      - Admin
+ *    security:
+ *      -bearerAuth: []
+ *    parameters: 
+ *      - in: path
+ *        name: courseId
+ *        required: true
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: Modules fetched successfully
+ *      401:
+ *        description: Unauthorized
+ */
+
+/**
+ * @openapi
+ * /v1/admin/modules/{moduleId}/topics:
+ *  get:
+ *    summary: Admin views topics of a module
+ *    tags:
+ *      - Admin
+ *    security:
+ *      -bearerAuth: []
+ *    parameters: 
+ *      - in: path
+ *        name: moduleId
+ *        required: true
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: Topics fetched successfully
+ *      401:
+ *        description: Unauthorized
+ */

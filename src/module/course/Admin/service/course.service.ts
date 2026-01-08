@@ -1,4 +1,4 @@
-import { Course } from "../../model/course.model";
+import { Course, ICourse } from "../../model/course.model";
 import { CourseModule } from "../../model/module.model";
 import { Topic } from "../../model/topic.model";
 import { Enrollment } from "../../model/enrollment.model";
@@ -47,6 +47,6 @@ export const deleteCourseService = async (courseId: string) => {
 };
 
 // Get all courses for admin
-export const getAdminCoursesService = async () => {
+export const getAdminCoursesService = async (): Promise<ICourse[]> => {
   return Course.find().sort({ createdAt: -1 });
 };

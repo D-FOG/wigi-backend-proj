@@ -110,6 +110,7 @@
  *      401:
  *        description: Unauthorized
  */
+
 /**
  * @openapi
  * /v1/my-courses/{courseId}/topics:/{topicId}/complete:
@@ -136,6 +137,67 @@
  *        description: Topic completed
  *      403:
  *        description: Not enrolled
+ *      401:
+ *        description: Unauthorized
+ */
+
+
+/**
+ * @openapi
+ * /v1/user/courses:
+ *  get:
+ *    summary: User views all available courses based on course chosen at registration
+ *    tags:
+ *      - Course
+ *    security:
+ *      -bearerAuth: []
+ *    responses:
+ *      200:
+ *        description: User courses fetched
+ *      401:
+ *        description: Unauthorized
+ */
+
+/**
+ * @openapi
+ * /v1/courses/{courseId}/modules:
+ *  get:
+ *    summary: User views a course's modules
+ *    tags:
+ *      - Course
+ *    security:
+ *      -bearerAuth: []
+ *    parameters: 
+ *      - in: path
+ *        name: courseId
+ *        required: true
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: Modules fetched successfully
+ *      401:
+ *        description: Unauthorized
+ */
+
+/**
+ * @openapi
+ * /v1/modules/{moduleId}/topics:
+ *  get:
+ *    summary: User views topics of a module
+ *    tags:
+ *      - Course
+ *    security:
+ *      -bearerAuth: []
+ *    parameters: 
+ *      - in: path
+ *        name: moduleId
+ *        required: true
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: Topics fetched successfully
  *      401:
  *        description: Unauthorized
  */
