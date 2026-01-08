@@ -117,7 +117,7 @@ export const getUserCoursesService = async (userId: string) => {
   if (!user) throw new ApiError(404, "User not found");
 
   return Course.find({
-    course: user.course,
+    track: user.course,
     isPublished: true,
   }).sort({ createdAt: -1 });
 };
