@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "../../user/model/user.model";
 import { ApiError } from "../../../utils/apiError";
+import { Course } from "../../course/model/course.model";
 
 
 export const registerStudent = async (data: {
@@ -47,6 +48,14 @@ export const loginUser = async (
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) throw new ApiError(400, "Invalid credentials");
 
+  const courseTrack = user.course;
+  const course = await Course.findOne({
+      track: user.course,
+      isPublished: true,
+    });
+    
+ const courseId = course ? course._id : null;
+
   const token = jwt.sign(
     { id: user._id, role: user.role },
     process.env.JWT_SECRET!,
@@ -62,6 +71,7 @@ export const loginUser = async (
     email: user.email,
     role: user.role,
     profileCompleted: user.profileCompleted,
+    courseId: courseId,
   };
 
   return { user: safeUser, token };
