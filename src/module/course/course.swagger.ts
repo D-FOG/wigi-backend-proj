@@ -5,21 +5,21 @@
  *   description: User Views Courses and Enrolls for course
  */
 
-// /**
-//  * @openapi
-//  * /v1/courses:
-//  *  get:
-//  *    summary: User views courses
-//  *    tags:
-//  *      - Course
-//  *    security:
-//  *      -bearerAuth: []
-//  *    responses:
-//  *      200:
-//  *        description: Courses fetched
-//  *      401:
-//  *        description: Unauthorized
-//  */
+/**
+ * @openapi
+ * /v1/courses:
+ *  get:
+ *    summary: User views courses
+ *    tags:
+ *      - Course
+ *    security:
+ *      -bearerAuth: []
+ *    responses:
+ *      200:
+ *        description: Courses fetched
+ *      401:
+ *        description: Unauthorized
+ */
 
 // /**
 //  * @openapi
