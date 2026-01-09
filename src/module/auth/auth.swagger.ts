@@ -25,6 +25,7 @@
  *                 - email
  *                 - phoneNumber
  *                 - occupation
+ *                 - course
  *                 - courseOfStudy
  *                 - level
  *                 - universityName
@@ -40,6 +41,8 @@
  *                   type: string
  *                 occupation:
  *                   type: string
+ *                 course:
+ *                   type: string
  *                 courseOfStudy:
  *                   type: string
  *                 level:
@@ -53,6 +56,7 @@
  *                 - email
  *                 - phoneNumber
  *                 - ocuppation
+ *                 - course
  *                 - jobTitle
  *                 - companyName
  *               properties:
@@ -67,6 +71,8 @@
  *                   type: string
  *                 occupation:
  *                   type: string
+ *                 course:
+ *                   type: string
  *                 jobTitle:
  *                   type: string
  *                 companyName:
@@ -77,7 +83,8 @@
  *                 - lastName
  *                 - email
  *                 - phoneNumber
- *                 - ocuppation
+ *                 - occupation
+ *                 - course
  *                 - companyName
  *               properties:
  *                 firstName:
@@ -90,6 +97,8 @@
  *                 phoneNumber:
  *                   type: string
  *                 occupation:
+ *                   type: string
+ *                 course:
  *                   type: string
  *                 companyName:
  *                   type: string
