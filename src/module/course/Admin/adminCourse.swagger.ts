@@ -25,6 +25,8 @@
  *                type: string
  *              description:
  *                type: string
+ *              track:
+ *                type: string
  *    responses:
  *      200:
  *        description: Course Created successfully
