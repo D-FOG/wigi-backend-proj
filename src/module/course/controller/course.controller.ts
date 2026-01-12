@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { browseCourses, getCoursePreview, enrollCourse, getMyCourse, completeTopic, getMyCourses, getCourseModulesService, getModuleTopicsService, getUserCoursesService } from "../service/course.service";
+import { browseCourses, getCoursePreview, enrollCourse, getMyCourse, completeTopic, getMyCourses, getCourseModulesService, getModuleTopicsService, getUserCoursesService, getUserCourseTimelineService } from "../service/course.service";
 import { apiResponse } from "../../../utils/apiResponse";
 import { AuthRequest } from "../../../middlewares/auth.middleware";
 
@@ -60,4 +60,10 @@ export const getCourseModules = async (req: Request, res: Response) => {
 export const getModuleTopics = async (req: Request, res: Response) => {
   const topics = await getModuleTopicsService(req.params.moduleId);
   return apiResponse(res, 200, "Topics fetched successfully", topics);
+};
+
+//Get user course timeline with module and topic statuses
+export const getUserCourseTimeline = async (req: AuthRequest, res: Response) => {
+  const timeline = await getUserCourseTimelineService(req.user!.id);
+  return apiResponse(res, 200, "User course timeline fetched", timeline);
 };

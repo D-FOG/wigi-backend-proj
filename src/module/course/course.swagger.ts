@@ -201,3 +201,21 @@
  *      401:
  *        description: Unauthorized
  */
+
+/**
+ * @openapi
+ * /v1/user/course/timeline:
+ *  get:
+ *    summary: Get user course timeline with module and topic statuses
+ *    tags:
+ *      - Course
+ *    security:
+ *      -bearerAuth: []
+ *    responses:
+ *      200:
+ *        description: User course timeline fetched
+ *      404: 
+ *        description: User not enrolled
+ *      401:
+ *        description: Unauthorized
+ */

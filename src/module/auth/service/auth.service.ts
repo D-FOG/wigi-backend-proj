@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { User } from "../../user/model/user.model";
 import { ApiError } from "../../../utils/apiError";
 import { Course } from "../../course/model/course.model";
+import { Enrollment } from "../../course/model/enrollment.model";
 
 
 export const registerStudent = async (data: {
@@ -29,6 +30,23 @@ export const registerStudent = async (data: {
     ...data,
     password: hashed,
     role: "student",
+  });
+
+
+  // Find course by track
+  const course = await Course.findOne({
+    track: data.course,
+    isPublished: true,
+  });
+
+  if (!course) {
+    throw new ApiError(400, "Selected course not available");
+  }
+
+  // Create enrollment
+  await Enrollment.create({
+    userId: userDoc._id,
+    courseId: course._id,
   });
 
   const { password, __v, ...user } = userDoc.toObject();

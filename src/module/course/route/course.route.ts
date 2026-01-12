@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getCourses, getCourse, enroll, getMyCourseDetails, trackCompleteTopic, getMyCoursesList, getUserCourses, getModuleTopics, getCourseModules  } from "../controller/course.controller";
+import { getCourses, getCourse, enroll, getMyCourseDetails, trackCompleteTopic, getMyCoursesList, getUserCourses, getModuleTopics, getCourseModules, getUserCourseTimeline  } from "../controller/course.controller";
 import { authMiddleware } from "../../../middlewares/auth.middleware";
 
 const router = Router();
@@ -36,4 +36,9 @@ router.get(
   getUserCourses
 );
 
+router.get(
+  "/user/course/timeline", 
+  authMiddleware, 
+  getUserCourseTimeline
+);
 export default router;

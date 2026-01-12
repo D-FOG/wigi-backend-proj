@@ -397,3 +397,51 @@
  *      401:
  *        description: Unauthorized
  */
+
+/**
+ * @openapi
+ * /v1/admin/students:
+ *  get:
+ *    summary: Admin views all students
+ *    tags:
+ *      - Admin
+ *    security:
+ *      - bearerAuth: []
+ *    parameters:
+ *      - in: query
+ *        name: course
+ *        required: false
+ *        schema:
+ *          type: string
+ *          example: software-development
+ *      - in: query
+ *        name: search
+ *        required: false
+ *        description: Search by first name, last name, or email
+ *        schema:
+ *          type: string
+ *          examples:
+ *            nameSearch:
+ *              summary: Search by name
+ *              value: john
+ *            emailSearch:
+ *              summary: Search by email
+ *              value: john@gmail.com
+ *      - in: query
+ *        name: page
+ *        required: false
+ *        schema: 
+ *          type: integer
+ *          example: 1
+ *      - in: query
+ *        name: limit
+ *        required: false
+ *        schema:
+ *          type: integer
+ *          example: 10
+ *    responses:
+ *      200:
+ *        description: Students fetched
+ *      401:
+ *        description: Unauthorized
+ */

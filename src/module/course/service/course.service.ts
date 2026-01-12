@@ -136,4 +136,90 @@ export const getModuleTopicsService = async (moduleId: string) => {
     .sort({ order: 1 });
 };
 
+//Get user course timeline with module and topic statuses
+export const getUserCourseTimelineService = async (userId: string) => {
+  const enrollment = await Enrollment.findOne({ userId }).lean();
+  if (!enrollment) throw new ApiError(404, "User not enrolled");
+
+  console.log('Enrollment:', enrollment);
+
+  const modules = await CourseModule.find({ courseId: enrollment.courseId })
+    .sort({ order: 1 })
+    .lean();
+
+  if (!modules.length) return [];
+
+  console.log('Modules:', modules);
+
+  // Fetch ALL topics at once (NO N+1)
+  const topics = await Topic.find({
+    moduleId: { $in: modules.map(m => m._id) },
+  })
+    .sort({ order: 1 })
+    .lean();
+
+  console.log('Topics:', topics);
+
+  // Group topics by module
+  const topicsByModule = topics.reduce((acc, topic) => {
+    const key = topic.moduleId.toString();
+    acc[key] = acc[key] || [];
+    acc[key].push(topic);
+    return acc;
+  }, {} as Record<string, any[]>);
+
+  console.log('Topics by Module:', topicsByModule);
+
+  // Build timeline with statuses
+  const now = new Date();
+  let currentStart = new Date(enrollment.createdAt);
+
+  console.log('Enrollment Start Date:', currentStart + 'date now:', now);
+
+  return modules.map(module => {
+    const startDate = new Date(currentStart);
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + module.durationInDays);
+
+    let status: "upcoming" | "active" | "completed";
+    if (now < startDate) status = "upcoming";
+    else if (now <= endDate) status = "active";
+    else status = "completed";
+
+    currentStart = endDate;
+    console.log({
+      moduleId: module._id,
+      title: module.title,
+      order: module.order,
+      startDate,
+      endDate,
+      status,
+      topics: (topicsByModule[module._id.toString()] || []).map(topic => ({
+        topicId: topic._id,
+        title: topic.title,
+        order: topic.order,
+        status, // inherited
+         materials: status === "upcoming" ? [] : topic.materials,
+      }))
+    });
+
+    return {
+      moduleId: module._id,
+      title: module.title,
+      order: module.order,
+      startDate,
+      endDate,
+      status,
+      topics: (topicsByModule[module._id.toString()] || []).map(topic => ({
+        topicId: topic._id,
+        title: topic.title,
+        order: topic.order,
+        status, // inherited
+         materials: status === "upcoming" ? [] : topic.materials,
+      })),
+    };
+  });
+};
+
+
 
