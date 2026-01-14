@@ -1,6 +1,10 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface ICourse extends Document {
+export interface ITimestamps {
+  createdAt: Date;
+  updatedAt: Date;
+}
+export interface ICourse extends Document, ITimestamps {
   title: string;
   description?: string;
   track: string;

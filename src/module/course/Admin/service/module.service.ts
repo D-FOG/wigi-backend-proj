@@ -6,7 +6,8 @@ import { ApiError } from "../../../../utils/apiError";
 export const createModule = async (
   courseId: string,
   title: string,
-  order?: number
+  order?: number,
+  durationInDays?: number
 ) => {
   const course = await Course.findById(courseId);
   if (!course) throw new ApiError(404, "Course not found");
@@ -15,6 +16,7 @@ export const createModule = async (
     courseId,
     title,
     order: order ?? 0,
+    durationInDays: durationInDays ?? 7,
   });
 
   return module;
@@ -22,7 +24,7 @@ export const createModule = async (
 
 export const updateModuleService = async (
   moduleId: string,
-  payload: Partial<{ title: string; order: number }>
+  payload: Partial<{ title: string; order: number, durationInDays: number }>
 ) => {
   const module = await CourseModule.findByIdAndUpdate(moduleId, payload, {
     new: true,

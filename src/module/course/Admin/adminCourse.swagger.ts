@@ -202,6 +202,8 @@
  *                type: string
  *              order:
  *                type: number
+ *              durationInDays:
+ *                type: number
  *    responses:
  *      200:
  *        description: Module updated successfully

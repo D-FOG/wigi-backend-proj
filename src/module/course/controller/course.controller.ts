@@ -53,6 +53,7 @@ export const getUserCourses = async (req: AuthRequest, res: Response) => {
 //Get modules of a course by course ID
 export const getCourseModules = async (req: Request, res: Response) => {
   const modules = await getCourseModulesService(req.params.courseId);
+  //console.log('Modules fetched:', modules);
   return apiResponse(res, 200, "Modules fetched successfully", modules);
 };
 
