@@ -24,15 +24,6 @@ export const registerStudent = async (data: {
   const existing = await User.findOne({ email: data.email });
   if (existing) throw new ApiError(400, "Email already exists");
 
-  const hashed = await bcrypt.hash(data.password, 10);
-
-  const userDoc = await User.create({
-    ...data,
-    password: hashed,
-    role: "student",
-  });
-
-
   // Find course by track
   const course = await Course.findOne({
     track: data.course,
@@ -42,6 +33,14 @@ export const registerStudent = async (data: {
   if (!course) {
     throw new ApiError(400, "Selected course not available");
   }
+  
+  const hashed = await bcrypt.hash(data.password, 10);
+
+  const userDoc = await User.create({
+    ...data,
+    password: hashed,
+    role: "student",
+  });
 
   // Create enrollment
   await Enrollment.create({
