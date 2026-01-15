@@ -9,7 +9,7 @@ import { issueCertificateService } from "../../certificate/service/certificate.s
 //Browse all courses
 export const browseCourses = async () => {
   return Course.find({ isPublished: true })
-    .select("title description thumbnail totalModules totalTopics")
+    .select("title description track thumbnail totalModules totalTopics")
     .sort({ createdAt: -1 });
 };
 
