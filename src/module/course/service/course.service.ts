@@ -137,7 +137,6 @@ export const getCourseModulesService = async (courseId: string) => {
   const now = new Date();
   const courseStart = new Date(course.createdAt);
 
-  // Days since course started (midnight-safe)
   const daysSinceStart = Math.floor(
     (now.getTime() - courseStart.getTime()) / (1000 * 60 * 60 * 24)
   );
@@ -151,12 +150,71 @@ export const getCourseModulesService = async (courseId: string) => {
     else if (module.order === activeOrder) status = "active";
     else status = "upcoming";
 
+    // ---- Availability Logic (9pm → 7pm) ----
+    let isContentAvailable = false;
+    let isQuizAvailable = false;
+    let availabilityWindow: { startsAt: Date; endsAt: Date } | null = null;
+
+    if (status === "active") {
+      const start = new Date();
+      start.setHours(21, 0, 0, 0); // 9:00 PM today
+
+      const end = new Date(start);
+      end.setDate(end.getDate() + 1);
+      end.setHours(19, 0, 0, 0); // 7:00 PM next day
+
+      availabilityWindow = { startsAt: start, endsAt: end };
+
+      if (now >= start && now <= end) {
+        isContentAvailable = true;
+        isQuizAvailable = true;
+      }
+    }
+
     return {
       ...module,
       status,
+      isContentAvailable,
+      isQuizAvailable,
+      availabilityWindow,
     };
   });
 };
+
+// export const getCourseModulesService = async (courseId: string) => {
+//   const course = await Course.findById(courseId).select("createdAt");
+//   if (!course) throw new ApiError(404, "Course not found");
+
+//   const modules = await CourseModule.find({ courseId })
+//     .select("_id title order durationInDays")
+//     .sort({ order: 1 })
+//     .lean();
+
+//   if (!modules.length) return [];
+
+//   const now = new Date();
+//   const courseStart = new Date(course.createdAt);
+
+//   // Days since course started (midnight-safe)
+//   const daysSinceStart = Math.floor(
+//     (now.getTime() - courseStart.getTime()) / (1000 * 60 * 60 * 24)
+//   );
+
+//   const activeOrder = daysSinceStart + 1;
+
+//   return modules.map((module) => {
+//     let status: "completed" | "active" | "upcoming";
+
+//     if (module.order < activeOrder) status = "completed";
+//     else if (module.order === activeOrder) status = "active";
+//     else status = "upcoming";
+
+//     return {
+//       ...module,
+//       status,
+//     };
+//   });
+// };
 
 
 //Get topics of a module by module ID
