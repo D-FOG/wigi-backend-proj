@@ -32,7 +32,7 @@
 /**
  * @openapi
  * /v1/student/quiz/{quizId}/attempt:
- *  get:
+ *  post:
  *    summary: Student attempts a quiz
  *    tags:
  *      - Quiz
@@ -100,7 +100,7 @@
 /**
  * @openapi
  * /v1/student/course/{courseId}/final-exam/submit:
- *  get:
+ *  post:
  *    summary: Submit final exam for a course
  *    tags:
  *      - Quiz

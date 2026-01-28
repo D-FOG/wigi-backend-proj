@@ -36,31 +36,56 @@
 
 /**
  * @openapi
- * /v1/admin/modules/{moduleId}/quiz:
+ * /admin/quizzes/{quizId}/questions:
  *   post:
- *     summary: Create a quiz for a course module
+ *     summary: Add a question to a quiz
  *     tags:
  *       - Quiz Admin
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: moduleId
+ *         name: quizId
  *         required: true
  *         schema:
  *           type: string
- *         description: Course module ID
+ *         description: Quiz ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - question
+ *               - options
+ *               - correctOptionIndex
+ *             properties:
+ *               question:
+ *                 type: string
+ *                 example: What does HTTP stand for?
+ *               options:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example:
+ *                   - HyperText Transfer Protocol
+ *                   - HyperText Transmission Process
+ *                   - HighText Transfer Protocol
+ *               correctOptionIndex:
+ *                 type: number
+ *                 example: 0
  *     responses:
  *       201:
- *         description: Quiz created successfully
+ *         description: Question added successfully
  *       400:
- *         description: Quiz already exists for this module
+ *         description: Invalid correct option index
  *       401:
  *         description: Unauthorized
  *       403:
  *         description: Admin access only
  *       404:
- *         description: Module not found
+ *         description: Quiz not found
  */
 
 /**
