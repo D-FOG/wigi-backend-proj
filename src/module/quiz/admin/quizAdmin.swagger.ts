@@ -36,7 +36,7 @@
 
 /**
  * @openapi
- * /admin/quizzes/{quizId}/questions:
+ * /v1/admin/quizzes/{quizId}/questions:
  *   post:
  *     summary: Add a question to a quiz
  *     tags:
