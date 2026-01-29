@@ -40,4 +40,11 @@ router.get(
   controller.getAllQuizzes
 );
 
+router.get(
+  "/admin/quizzes/:quizId/questions",
+  authMiddleware,
+  adminOnly,
+  controller.getQuestionsForAdmins
+);
+
 export default router;

@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { Quiz } from "../../model/quiz.model";
 import { QuizQuestion } from "../../model/quizQuestions.model";
 import { ApiError } from "../../../../utils/apiError";
@@ -111,3 +112,24 @@ export const getAllQuizzesService = async () => {
 
   return quizzes;
 };
+
+export const getQuestionsForAdmin = async (quizId: string) => {
+    // 1. Validate quiz exists
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      throw new ApiError(404, "Quiz not found");
+    }
+
+    // 2. Fetch questions (with correct answers)
+    const questions = await QuizQuestion.find({
+      quizId: new Types.ObjectId(quizId),
+    }).sort({ createdAt: 1 });
+
+    return {
+      quizId: quiz._id,
+      totalQuestions: quiz.totalQuestions,
+      durationMinutes: quiz.durationMinutes,
+      questions,
+    };
+};
+

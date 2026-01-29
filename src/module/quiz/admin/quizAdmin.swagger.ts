@@ -182,3 +182,30 @@
  *       403:
  *         description: Admin access only
  */
+
+/**
+ * @openapi
+ * /v1/admin/quizzes/{quizId}/questions:
+ *   get:
+ *     summary: get all questions for a quiz
+ *     tags:
+ *       - Quiz Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: quizId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Quiz ID
+ *     responses:
+ *       200:
+ *         description: Quiz questions fetched successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Admin access only
+ *       404:
+ *         description: Quiz not found
+ */
