@@ -164,3 +164,21 @@
  *       404:
  *         description: Quiz question not found
  */
+
+/**
+ * @openapi
+ * /v1/admin/quizzes:
+ *   get:
+ *     summary: Get all quizzes
+ *     tags:
+ *       - Quiz Admin
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Quizzes fetched successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Admin access only
+ */

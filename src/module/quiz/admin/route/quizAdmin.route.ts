@@ -33,6 +33,11 @@ router.delete(
   controller.deleteQuizQuestion
 );
 
-
+router.get(
+  "/admin/quizzes",
+  authMiddleware,
+  adminOnly,
+  controller.getAllQuizzes
+);
 
 export default router;

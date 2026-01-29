@@ -1,4 +1,4 @@
-import { createModuleQuizService, addQuizQuestionService, updateQuizQuestionService, deleteQuizQuestionService } from "../service/quizAdmin.service";
+import { createModuleQuizService, addQuizQuestionService, updateQuizQuestionService, deleteQuizQuestionService, getAllQuizzesService } from "../service/quizAdmin.service";
 import { Request, Response } from "express";
 import { apiResponse } from "../../../../utils/apiResponse";
 
@@ -33,4 +33,9 @@ export const deleteQuizQuestion = async (req:Request, res:Response) => {
   const result = await deleteQuizQuestionService(questionId);
   return apiResponse(res, 200, "Question deleted successfully", result);
 };
+
+export const getAllQuizzes = async( req:Request, res:Response) => {
+  const quizzes = await getAllQuizzesService();
+  return apiResponse(res, 200, "Quizzes fetched successfully", quizzes);
+}
 

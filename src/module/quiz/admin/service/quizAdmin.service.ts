@@ -100,3 +100,14 @@ export const deleteQuizQuestionService = async (questionId: string) => {
 
   return { message: "Quiz question deleted successfully" };
 };
+
+export const getAllQuizzesService = async () => {
+  const quizzes = await Quiz.find()
+    .populate({
+      path: "moduleId",
+      select: "_id title order courseId",
+    })
+    .sort({ createdAt: -1 });
+
+  return quizzes;
+};
