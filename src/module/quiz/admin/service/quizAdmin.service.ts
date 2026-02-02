@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import { Quiz } from "../../model/quiz.model";
 import { QuizQuestion } from "../../model/quizQuestions.model";
+import { QuizAttempt } from "../../model/quizAttemp.model";
 import { ApiError } from "../../../../utils/apiError";
 
 export const createModuleQuizService = async (moduleId: string) => {
@@ -133,3 +134,22 @@ export const getQuestionsForAdmin = async (quizId: string) => {
     };
 };
 
+export const deleteQuizService = async (quizId: string) => {
+  const quiz = await Quiz.findById(quizId);
+  if (!quiz) {
+    throw new ApiError(404, "Quiz not found");
+  }
+
+  // Delete all related questions
+  await QuizQuestion.deleteMany({ quizId });
+
+  // Delete all related attempts
+  await QuizAttempt.deleteMany({ quizId });
+
+  // Delete the quiz itself
+  await quiz.deleteOne();
+
+  return {
+    message: "Quiz, questions, and attempts deleted successfully",
+  };
+};

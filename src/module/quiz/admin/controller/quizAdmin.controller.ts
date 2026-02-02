@@ -1,4 +1,4 @@
-import { createModuleQuizService, addQuizQuestionService, updateQuizQuestionService, deleteQuizQuestionService, getAllQuizzesService, getQuestionsForAdmin } from "../service/quizAdmin.service";
+import { createModuleQuizService, addQuizQuestionService, updateQuizQuestionService, deleteQuizQuestionService, getAllQuizzesService, getQuestionsForAdmin, deleteQuizService } from "../service/quizAdmin.service";
 import { Request, Response } from "express";
 import { apiResponse } from "../../../../utils/apiResponse";
 
@@ -56,5 +56,11 @@ export const getQuestionsForAdmins = async (req: Request, res: Response) => {
         message: error.message || "Failed to fetch quiz questions",
       });
     }
+};
+
+export const deleteQuiz = async (req: Request, res: Response) => {
+  const { quizId } = req.params;
+  const result = await deleteQuizService(quizId);
+  return apiResponse(res, 200, "Quiz deleted successfully", result);
 };
 

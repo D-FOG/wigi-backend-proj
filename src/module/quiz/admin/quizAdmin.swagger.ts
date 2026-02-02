@@ -209,3 +209,30 @@
  *       404:
  *         description: Quiz not found
  */
+
+/**
+ * @openapi
+ * /v1/admin/quizzes/{quizId}:
+ *   delete:
+ *     summary: Delete a quiz
+ *     tags:
+ *       - Quiz Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: quizId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Quiz ID
+ *     responses:
+ *       200:
+ *         description: Quiz deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Admin access only
+ *       404:
+ *         description: Quiz not found
+ */
