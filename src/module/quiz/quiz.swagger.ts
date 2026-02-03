@@ -106,7 +106,6 @@
  *         description: Quiz or questions not found
  */
 
-
 /**
  * @openapi
  * /v1/student/course/{courseId}/exam/eligibility:
