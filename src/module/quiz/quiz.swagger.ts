@@ -31,7 +31,7 @@
  
 /**
  * @openapi
- * /student/quiz/{quizId}/attempt:
+ * /v1/student/quiz/{quizId}/attempt:
  *   post:
  *     summary: Submit a quiz attempt
  *     description: >
