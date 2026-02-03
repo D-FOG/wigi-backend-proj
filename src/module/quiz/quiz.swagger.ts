@@ -36,7 +36,7 @@
  *    summary: Submit a quiz attempt
  *    description: Submit answers for a quiz. A quiz can only be attempted once and must be submitted within the quiz duration.
  *    tags:
- *      - Student Quiz
+ *      - Quiz
  *    security:
  *      - bearerAuth: []
  *    parameters:
