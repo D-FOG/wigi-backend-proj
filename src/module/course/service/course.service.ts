@@ -124,7 +124,11 @@ export const getUserCoursesService = async (userId: string) => {
 };
 
 //Get modules of a course by course ID
-export const getCourseModulesService = async (courseId: string) => {
+export const getCourseModulesService = async (courseId: string, userId: string) => {
+
+  const user = await User.findById(userId).select("createdAt");
+  if (!user) throw new ApiError(404, "User not found");
+
   const course = await Course.findById(courseId).select("createdAt");
   if (!course) throw new ApiError(404, "Course not found");
 
@@ -145,10 +149,11 @@ export const getCourseModulesService = async (courseId: string) => {
   );
 
   const now = new Date();
-  const courseStart = new Date(course.createdAt);
+  //const courseStart = new Date(course.createdAt);
+  const userStart = new Date(user.createdAt);
 
   const daysSinceStart = Math.floor(
-    (now.getTime() - courseStart.getTime()) / (1000 * 60 * 60 * 24)
+    (now.getTime() - userStart.getTime()) / (1000 * 60 * 60 * 24)
   );
 
   const activeOrder = daysSinceStart + 1;

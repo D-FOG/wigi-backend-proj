@@ -1,6 +1,11 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface IUser extends Document {
+export interface ITimestamps {
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IUser extends Document, ITimestamps {
   // auth
   email: string;
   password: string;
