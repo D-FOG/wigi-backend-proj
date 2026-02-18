@@ -124,12 +124,14 @@ export const getUserCoursesService = async (userId: string) => {
 };
 
 //Get modules of a course by course ID
-export const getCourseModulesService = async (courseId: string, userId: string) => {
-
+export const getCourseModulesService = async (
+  courseId: string,
+  userId: string
+) => {
   const user = await User.findById(userId).select("createdAt");
   if (!user) throw new ApiError(404, "User not found");
 
-  const course = await Course.findById(courseId).select("createdAt");
+  const course = await Course.findById(courseId).select("_id");
   if (!course) throw new ApiError(404, "Course not found");
 
   const modules = await CourseModule.find({ courseId })
@@ -140,33 +142,52 @@ export const getCourseModulesService = async (courseId: string, userId: string) 
   if (!modules.length) return [];
 
   const moduleIds = modules.map((m) => m._id);
+
   const quizzes = await Quiz.find({ moduleId: { $in: moduleIds } })
     .select("_id moduleId")
     .lean();
 
   const quizMap = new Map(
-    quizzes.map((quiz) => [quiz.moduleId.toString(), quiz])
+    quizzes.map((q) => [q.moduleId.toString(), q])
   );
 
   const now = new Date();
-  //const courseStart = new Date(course.createdAt);
+
+  /**
+   * -----------------------------------------
+   * TIMEZONE + DAY NORMALIZATION (CRITICAL)
+   * -----------------------------------------
+   */
+
+  const WAT_OFFSET = 1 * 60 * 60 * 1000; // UTC+1 (Nigeria)
+
   const userStart = new Date(user.createdAt);
 
+  // Normalize user start to midnight UTC
+  const startDayUTC = new Date(Date.UTC(
+    userStart.getUTCFullYear(),
+    userStart.getUTCMonth(),
+    userStart.getUTCDate()
+  ));
+
+  // Normalize "today" to midnight UTC
+  const todayUTC = new Date(Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate()
+  ));
+
   const daysSinceStart = Math.floor(
-    (now.getTime() - userStart.getTime()) / (1000 * 60 * 60 * 24)
+    (todayUTC.getTime() - startDayUTC.getTime()) / (1000 * 60 * 60 * 24)
   );
 
   const activeOrder = daysSinceStart + 1;
 
-  //quiz window (GLOBAL)
-  const quizStart = new Date();
-  quizStart.setHours(21, 0, 0, 0); // 9pm today
-
-  const quizEnd = new Date(quizStart);
-  quizEnd.setDate(quizEnd.getDate() + 1);
-  quizEnd.setHours(19, 0, 0, 0); // 7pm next day
-
-  const isWithinQuizWindow = now >= quizStart && now <= quizEnd;
+  /**
+   * -----------------------------------------
+   * MODULE + QUIZ LOGIC
+   * -----------------------------------------
+   */
 
   return modules.map((module) => {
     let status: "completed" | "active" | "upcoming";
@@ -178,17 +199,44 @@ export const getCourseModulesService = async (courseId: string, userId: string) 
     const quiz = quizMap.get(module._id.toString());
     const hasQuiz = Boolean(quiz);
 
+    /**
+     * -----------------------------------------
+     * MODULE-SPECIFIC QUIZ WINDOW
+     * -----------------------------------------
+     */
+
+    // Module activation day (UTC midnight)
+    const moduleStartDay = new Date(startDayUTC);
+    moduleStartDay.setUTCDate(
+      moduleStartDay.getUTCDate() + (module.order - 1)
+    );
+
+    // Quiz starts at 9pm WAT on module day
+    const quizStart = new Date(moduleStartDay.getTime() + WAT_OFFSET);
+    quizStart.setUTCHours(21, 0, 0, 0);
+
+    // Quiz ends at 7pm WAT next day
+    const quizEnd = new Date(quizStart);
+    quizEnd.setUTCDate(quizEnd.getUTCDate() + 1);
+    quizEnd.setUTCHours(19, 0, 0, 0);
+
+    const isQuizAvailable =
+      hasQuiz &&
+      status === "active" &&
+      now >= quizStart &&
+      now <= quizEnd;
+
     return {
       ...module,
       status,
       hasQuiz,
       quizId: quiz ? quiz._id.toString() : null,
 
-      // content depends on module
+      // Module content availability
       isContentAvailable: status === "active",
 
-      // quiz depends on TIME + existence
-      isQuizAvailable: hasQuiz && isWithinQuizWindow,
+      // Quiz availability (FIXED)
+      isQuizAvailable,
 
       quizAvailabilityWindow: {
         startsAt: quizStart,
@@ -197,8 +245,11 @@ export const getCourseModulesService = async (courseId: string, userId: string) 
     };
   });
 };
+// export const getCourseModulesService = async (courseId: string, userId: string) => {
 
-// export const getCourseModulesService = async (courseId: string) => {
+//   const user = await User.findById(userId).select("createdAt");
+//   if (!user) throw new ApiError(404, "User not found");
+
 //   const course = await Course.findById(courseId).select("createdAt");
 //   if (!course) throw new ApiError(404, "Course not found");
 
@@ -209,7 +260,6 @@ export const getCourseModulesService = async (courseId: string, userId: string) 
 
 //   if (!modules.length) return [];
 
-//   // Fetch all quizzes once
 //   const moduleIds = modules.map((m) => m._id);
 //   const quizzes = await Quiz.find({ moduleId: { $in: moduleIds } })
 //     .select("_id moduleId")
@@ -220,13 +270,24 @@ export const getCourseModulesService = async (courseId: string, userId: string) 
 //   );
 
 //   const now = new Date();
-//   const courseStart = new Date(course.createdAt);
+//   //const courseStart = new Date(course.createdAt);
+//   const userStart = new Date(user.createdAt);
 
 //   const daysSinceStart = Math.floor(
-//     (now.getTime() - courseStart.getTime()) / (1000 * 60 * 60 * 24)
+//     (now.getTime() - userStart.getTime()) / (1000 * 60 * 60 * 24)
 //   );
 
 //   const activeOrder = daysSinceStart + 1;
+
+//   //quiz window (GLOBAL)
+//   const quizStart = new Date();
+//   quizStart.setHours(21, 0, 0, 0); // 9pm today
+
+//   const quizEnd = new Date(quizStart);
+//   quizEnd.setDate(quizEnd.getDate() + 1);
+//   quizEnd.setHours(19, 0, 0, 0); // 7pm next day
+
+//   const isWithinQuizWindow = now >= quizStart && now <= quizEnd;
 
 //   return modules.map((module) => {
 //     let status: "completed" | "active" | "upcoming";
@@ -236,286 +297,27 @@ export const getCourseModulesService = async (courseId: string, userId: string) 
 //     else status = "upcoming";
 
 //     const quiz = quizMap.get(module._id.toString());
-
-//     // Always expose quiz info if it exists
-//     const quizId = quiz ? quiz._id.toString() : null;
 //     const hasQuiz = Boolean(quiz);
-
-//     // ---- Availability Logic (9pm → 7pm) ----
-//     let isContentAvailable = false;
-//     let isQuizAvailable = false;
-//     let availabilityWindow: { startsAt: Date; endsAt: Date } | null = null;
-
-//     if (status === "active") {
-//       const start = new Date();
-//       start.setHours(21, 0, 0, 0); // 9 PM today
-
-//       const end = new Date(start);
-//       end.setDate(end.getDate() + 1);
-//       end.setHours(19, 0, 0, 0); // 7 PM next day
-
-//       availabilityWindow = { startsAt: start, endsAt: end };
-
-//       if (now >= start && now <= end) {
-//         isContentAvailable = true;
-//         isQuizAvailable = hasQuiz;
-//       }
-//     }
 
 //     return {
 //       ...module,
 //       status,
 //       hasQuiz,
-//       quizId,
-//       isContentAvailable,
-//       isQuizAvailable,
-//       availabilityWindow,
+//       quizId: quiz ? quiz._id.toString() : null,
+
+//       // content depends on module
+//       isContentAvailable: status === "active",
+
+//       // quiz depends on TIME + existence
+//       isQuizAvailable: hasQuiz && isWithinQuizWindow,
+
+//       quizAvailabilityWindow: {
+//         startsAt: quizStart,
+//         endsAt: quizEnd,
+//       },
 //     };
 //   });
 // };
-// export const getCourseModulesService = async (courseId: string) => {
-//   const course = await Course.findById(courseId).select("createdAt");
-//   if (!course) throw new ApiError(404, "Course not found");
-
-//   const modules = await CourseModule.find({ courseId })
-//     .select("_id title order durationInDays")
-//     .sort({ order: 1 })
-//     .lean();
-
-//   if (!modules.length) return [];
-
-//   // Fetch all quizzes once
-//   const moduleIds = modules.map((m) => m._id);
-//   const quizzes = await Quiz.find({ moduleId: { $in: moduleIds } })
-//     .select("_id moduleId")
-//     .lean();
-
-//   const quizMap = new Map(
-//     quizzes.map((quiz) => [quiz.moduleId.toString(), quiz])
-//   );
-
-//   const now = new Date();
-//   const courseStart = new Date(course.createdAt);
-
-//   const daysSinceStart = Math.floor(
-//     (now.getTime() - courseStart.getTime()) / (1000 * 60 * 60 * 24)
-//   );
-
-//   const activeOrder = daysSinceStart + 1;
-
-//   return modules.map((module) => {
-//     let status: "completed" | "active" | "upcoming";
-
-//     if (module.order < activeOrder) status = "completed";
-//     else if (module.order === activeOrder) status = "active";
-//     else status = "upcoming";
-
-//     const quiz = quizMap.get(module._id.toString());
-
-//     // Always expose quiz info if it exists
-//     const quizId = quiz ? quiz._id.toString() : null;
-//     const hasQuiz = Boolean(quiz);
-
-//     // ---- Availability Logic (9pm → 7pm) ----
-//     let isContentAvailable = false;
-//     let isQuizAvailable = false;
-//     let availabilityWindow: { startsAt: Date; endsAt: Date } | null = null;
-
-//     if (status === "active") {
-//       const start = new Date();
-//       start.setHours(21, 0, 0, 0); // 9 PM today
-
-//       const end = new Date(start);
-//       end.setDate(end.getDate() + 1);
-//       end.setHours(19, 0, 0, 0); // 7 PM next day
-
-//       availabilityWindow = { startsAt: start, endsAt: end };
-
-//       if (now >= start && now <= end) {
-//         isContentAvailable = true;
-//         isQuizAvailable = hasQuiz;
-//       }
-//     }
-
-//     return {
-//       ...module,
-//       status,
-//       hasQuiz,
-//       quizId,
-//       isContentAvailable,
-//       isQuizAvailable,
-//       availabilityWindow,
-//     };
-//   });
-// };
-
-// export const getCourseModulesService = async (courseId: string) => {
-//   const course = await Course.findById(courseId).select("createdAt");
-//   if (!course) throw new ApiError(404, "Course not found");
-
-//   const modules = await CourseModule.find({ courseId })
-//     .select("_id title order durationInDays")
-//     .sort({ order: 1 })
-//     .lean();
-
-//   if (!modules.length) return [];
-
-//   // ✅ Fetch all quizzes for these modules (ONE QUERY)
-//   const moduleIds = modules.map((m) => m._id);
-//   const quizzes = await Quiz.find({ moduleId: { $in: moduleIds } })
-//     .select("_id moduleId")
-//     .lean();
-
-//   const quizMap = new Map(
-//     quizzes.map((quiz) => [quiz.moduleId.toString(), quiz])
-//   );
-
-//   const now = new Date();
-//   const courseStart = new Date(course.createdAt);
-
-//   const daysSinceStart = Math.floor(
-//     (now.getTime() - courseStart.getTime()) / (1000 * 60 * 60 * 24)
-//   );
-
-//   const activeOrder = daysSinceStart + 1;
-
-//   return modules.map((module) => {
-//     let status: "completed" | "active" | "upcoming";
-
-//     if (module.order < activeOrder) status = "completed";
-//     else if (module.order === activeOrder) status = "active";
-//     else status = "upcoming";
-
-//     // ---- Availability Logic (9pm → 7pm) ----
-//     let isContentAvailable = false;
-//     let isQuizAvailable = false;
-//     let availabilityWindow: { startsAt: Date; endsAt: Date } | null = null;
-//     let quizId: string | null = null;
-
-//     const quiz = quizMap.get(module._id.toString());
-
-//     if (status === "active") {
-//       const start = new Date();
-//       start.setHours(21, 0, 0, 0); // 9 PM today
-
-//       const end = new Date(start);
-//       end.setDate(end.getDate() + 1);
-//       end.setHours(19, 0, 0, 0); // 7 PM next day
-
-//       availabilityWindow = { startsAt: start, endsAt: end };
-
-//       if (now >= start && now <= end) {
-//         isContentAvailable = true;
-//         isQuizAvailable = Boolean(quiz);
-//         quizId = quiz ? quiz._id.toString() : null;
-//       }
-//     }
-
-//     return {
-//       ...module,
-//       status,
-//       hasQuiz: Boolean(quiz),
-//       quizId,
-//       isContentAvailable,
-//       isQuizAvailable,
-//       availabilityWindow,
-//     };
-//   });
-// };
-
-// export const getCourseModulesService = async (courseId: string) => {
-//   const course = await Course.findById(courseId).select("createdAt");
-//   if (!course) throw new ApiError(404, "Course not found");
-
-//   const modules = await CourseModule.find({ courseId })
-//     .select("_id title order durationInDays")
-//     .sort({ order: 1 })
-//     .lean();
-
-//   if (!modules.length) return [];
-
-//   const now = new Date();
-//   const courseStart = new Date(course.createdAt);
-
-//   const daysSinceStart = Math.floor(
-//     (now.getTime() - courseStart.getTime()) / (1000 * 60 * 60 * 24)
-//   );
-
-//   const activeOrder = daysSinceStart + 1;
-
-//   return modules.map((module) => {
-//     let status: "completed" | "active" | "upcoming";
-
-//     if (module.order < activeOrder) status = "completed";
-//     else if (module.order === activeOrder) status = "active";
-//     else status = "upcoming";
-
-//     // ---- Availability Logic (9pm → 7pm) ----
-//     let isContentAvailable = false;
-//     let isQuizAvailable = false;
-//     let availabilityWindow: { startsAt: Date; endsAt: Date } | null = null;
-
-//     if (status === "active") {
-//       const start = new Date();
-//       start.setHours(21, 0, 0, 0); // 9:00 PM today
-
-//       const end = new Date(start);
-//       end.setDate(end.getDate() + 1);
-//       end.setHours(19, 0, 0, 0); // 7:00 PM next day
-
-//       availabilityWindow = { startsAt: start, endsAt: end };
-
-//       if (now >= start && now <= end) {
-//         isContentAvailable = true;
-//         isQuizAvailable = true;
-//       }
-//     }
-
-//     return {
-//       ...module,
-//       status,
-//       isContentAvailable,
-//       isQuizAvailable,
-//       availabilityWindow,
-//     };
-//   });
-// };
-
-// export const getCourseModulesService = async (courseId: string) => {
-//   const course = await Course.findById(courseId).select("createdAt");
-//   if (!course) throw new ApiError(404, "Course not found");
-
-//   const modules = await CourseModule.find({ courseId })
-//     .select("_id title order durationInDays")
-//     .sort({ order: 1 })
-//     .lean();
-
-//   if (!modules.length) return [];
-
-//   const now = new Date();
-//   const courseStart = new Date(course.createdAt);
-
-//   // Days since course started (midnight-safe)
-//   const daysSinceStart = Math.floor(
-//     (now.getTime() - courseStart.getTime()) / (1000 * 60 * 60 * 24)
-//   );
-
-//   const activeOrder = daysSinceStart + 1;
-
-//   return modules.map((module) => {
-//     let status: "completed" | "active" | "upcoming";
-
-//     if (module.order < activeOrder) status = "completed";
-//     else if (module.order === activeOrder) status = "active";
-//     else status = "upcoming";
-
-//     return {
-//       ...module,
-//       status,
-//     };
-//   });
-// };
-
 
 //Get topics of a module by module ID
 export const getModuleTopicsService = async (moduleId: string) => {
