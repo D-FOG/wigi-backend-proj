@@ -211,14 +211,14 @@ export const getCourseModulesService = async (
       moduleStartDay.getUTCDate() + (module.order - 1)
     );
 
-    // Quiz starts at 9pm WAT on module day
-    const quizStart = new Date(moduleStartDay.getTime() + WAT_OFFSET);
-    quizStart.setUTCHours(21, 0, 0, 0);
+    // Quiz starts at 9pm WAT on module day (which is 8pm UTC = 20:00 UTC)
+    const quizStart = new Date(moduleStartDay.getTime());
+    quizStart.setUTCHours(20, 0, 0, 0);
 
-    // Quiz ends at 7pm WAT next day
+    // Quiz ends at 7pm WAT next day (which is 6pm UTC = 18:00 UTC)
     const quizEnd = new Date(quizStart);
     quizEnd.setUTCDate(quizEnd.getUTCDate() + 1);
-    quizEnd.setUTCHours(19, 0, 0, 0);
+    quizEnd.setUTCHours(18, 0, 0, 0);
 
     const isQuizAvailable =
       hasQuiz &&
